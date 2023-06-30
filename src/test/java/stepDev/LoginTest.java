@@ -1,4 +1,4 @@
-package stepDef;
+package stepDev;
 
 import config.env_target;
 import io.cucumber.java.en.And;
@@ -12,10 +12,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class Login extends env_target {
-    @Given("User Login")
-    public void userLogin() {
-        //atur driver edge
+public class LoginTest extends env_target {
+    @Given("User Open url website")
+    public void userOpenUrlWebsite() {
         System.setProperty("webdriver.edge.driver","src\\main\\resources\\msedgedriver.exe");
         driver = new EdgeDriver();
         driver.manage().window().maximize();
@@ -28,8 +27,8 @@ public class Login extends env_target {
         );
     }
 
-    @When("User Input username and password")
-    public void userInputUsernameAndPassword() {
+    @When("User do Input valid username and password")
+    public void userDoInputValidUsernameAndPassword() {
         driver.findElement(By.id("user-name")).sendKeys("standard_user");
         driver.findElement(By.id("password")).sendKeys("secret_sauce");
     }
@@ -39,8 +38,8 @@ public class Login extends env_target {
         driver.findElement(By.id("login-button")).click();
     }
 
-    @Then("User Logged in")
-    public void userLoggedIn() {
+    @Then("User success Logged in")
+    public void userSuccessLoggedIn() {
         Duration duration = Duration.ofSeconds(5);
         WebDriverWait wait = new WebDriverWait(driver, duration);
         wait.until(
@@ -49,19 +48,25 @@ public class Login extends env_target {
         driver.quit();
     }
 
-    @When("User Input username and wrong password")
-    public void userInputUsernameAndWrongPassword() {
-        driver.findElement(By.id("user-name")).sendKeys("standard_user");
-        driver.findElement(By.id("password")).sendKeys("secret_saauce");
+    @When("User Input (.*) and (.*)$")
+    public void userInputUsernameAndPassword(String username, String password) {
+        driver.findElement(By.id("user-name")).sendKeys(username);
+        driver.findElement(By.id("password")).sendKeys(password);
     }
 
-    @Then("User Get Error Msg")
-    public void userGetErrorMsg() {
+    @Then("User failed Loggin with (.*)$")
+    public void userFailedLogginWithResult(String result) {
         Duration duration = Duration.ofSeconds(5);
         WebDriverWait wait = new WebDriverWait(driver, duration);
-        wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='login_button_container']/div/form/div[3]/h3/button"))
-        );
+        if (result == "passed"){
+            wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='header_container']/div[2]/span"))
+            );
+        }else if (result == "failed") {
+            wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='login_button_container']/div/form/div[3]/h3/button"))
+            );
+        }
         driver.quit();
     }
 }

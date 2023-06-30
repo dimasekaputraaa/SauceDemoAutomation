@@ -1,16 +1,19 @@
-@All
+@all
 Feature: Login
 
-    @Test1 @Positive
-    Scenario: Login
-      Given User Login
-      When User Input username and password
+    Scenario: user login Use Valid Username And Password
+      Given User Open url website
+      When User do Input valid username and password
       And User Click login button
-      Then User Logged in
+      Then User success Logged in
+    Scenario Outline: user login with invalid username or invalid password
+      Given User Open url website
+      When User Input <username> and <password>
+      And User Click login button
+      Then User failed Loggin with result
 
-    @Test2 @Negative
-    Scenario: Login with wrong pass
-      Given User Login
-      When User Input username and wrong password
-      And User Click login button
-      Then User Get Error Msg
+    Examples:
+      | username | password | result |
+      | standard_user | secret_sauce | passed |
+      | standard_userz | secret_sauce | failed |
+      | standard_user  | public_sauce | failed |
