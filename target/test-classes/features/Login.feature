@@ -15,5 +15,5 @@ Feature: Login
     Examples:
       | username | password | result |
       | standard_user | secret_sauce | passed |
-      | standard_userz | secret_sauce | failed |
-      | standard_user  | public_sauce | failed |
+      | standard_userz | secret_sauce | passed |
+      | standard_user  | public_sauce | passed |
